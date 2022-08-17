@@ -1,89 +1,83 @@
 #include "sort.h"
 
 /**
- * _swap - swap two numbers.
- * @a: integer
- * @b: integer
- **/
-
-void _swap(int *a, int *b)
-{
-	inttmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-
-}
-
-/**
- * _split - Split the array and takes the last element as pivot
- * @arr: Array
- * @min: first element
- * @last: The last element
- * @size: size
- * Return: integer
- **/
-int _split(int *arr, int min, int last, size_t size)
-{
-	intpiv;
-	inti = (min);
-	int j;
-
-	piv = arr[last];
-	for (j = min; j < last; j++)
-	{
-		if (arr[j] <= piv)
-		{
-
-			_swap(&arr[i], &arr[j]);
-
-
-			if (i != j)
-				print_array(arr, size);
-
-			i++;
-
-		}
-	}
-
-	_swap(&arr[i], &arr[last]);
-	if (i != j)
-		print_array(arr, size);
-
-	return (i);
-}
-
-/**
- * quick_sort_array - quick_sort_array
- * @arr: arr
- * @min: min
- * @last: last
- * @size: size
- * Return: Nothing
+ * quick_sort - quick sort implementation
+ *
+ * @array: array to be sorted
+ * @size: size of the array
  */
-void quick_sort_array(int *arr, int min, int last, size_t size)
-{
-
-	intpiv;
-
-	if (min < last)
-	{
-		piv = _split(arr, min, last, size);
-		quick_sort_array(arr, min, (piv - 1), size);
-		quick_sort_array(arr, (piv + 1), last, size);
-	}
-}
-
-/**
- * quick_sort -Sort an array using quick_sort algorithm
- * @array: array
- * @size: size
- **/
 void quick_sort(int *array, size_t size)
 {
-	if (size < 2)
+	if (array == NULL || size < 2)
 		return;
+	q_sort(array, 0, size - 1, size);
+}
 
-	quick_sort_array(array, 0, size - 1, size);
+/**
+ * partition - partition based on lumoto scheme
+ *
+ * @array: array to be sorted
+ * @lo: low index of the partision
+ * @hi: hi index of the partition
+ * @size: size of the array
+ * Return: index of the partition
+ */
+size_t partition(int *array, ssize_t lo, ssize_t hi, size_t size)
+{
+	ssize_t i, j;
+	int pivot;
+
+	pivot = array[hi];
+	i = lo - 1;
+	for (j = lo; j < hi; j++)
+	{
+		if (array[j] < pivot)
+		{
+			i++;
+			if (i != j)
+			{
+				swap_elements(&array[i], &array[j]);
+				print_array(array, size);
+			}
+		}
+	}
+	if (array[hi] < array[i + 1])
+	{
+		swap_elements(&array[i + 1], &array[hi]);
+		print_array(array, size);
+	}
+	return (i + 1);
+}
+
+/**
+ * swap_elements - swaps elements b to a
+ *
+ * @a: element to be swapped to
+ * @b: element to swap from
+ */
+void swap_elements(int *a, int *b)
+{
+	*a = *a ^ *b;
+	*b = *a ^ *b;
+	*a = *a ^ *b;
+}
+
+/**
+ * q_sort - sub implementation of quick sort
+ *
+ * @array: array to be sorted
+ * @lo: lo index to be sorted
+ * @hi: hi index
+ * @size: size of the array
+ */
+void q_sort(int *array, ssize_t lo, ssize_t hi, size_t size)
+{
+	ssize_t pivot;
+
+	if (lo < hi)
+	{
+		pivot = partition(array, lo, hi, size);
+		q_sort(array, lo, pivot - 1, size);
+		q_sort(array, pivot + 1, hi, size);
+	}
 }
